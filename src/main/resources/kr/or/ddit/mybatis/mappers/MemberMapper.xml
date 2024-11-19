@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.member.dao.MemberDAO">
+    <select id="selectMemberForAuth" resultType="MemberVO">
+        SELECT MEM_ID, MEM_PASS, MEM_NAME, MEM_MAIL, MEM_HP, MEM_ROLE
+             , MEM_IMG
+        FROM MEMBER
+        WHERE MEM_ID = #{noname} AND MEM_DELETE IS NULL
+    </select>
+    <resultMap type="MemberVO" id="memberMap" autoMapping="true">
+        <id property="memId" column="MEM_ID"/>
+        <collection property="cartList" ofType="CartVO" autoMapping="true">
+            <association property="prod" javaType="ProdVO" autoMapping="true">
+                <association property="lprod" javaType="LprodVO" autoMapping="true" />
+                <association property="buyer" javaType="BuyerVO" autoMapping="true" />
+            </association>
+        </collection>
+    </resultMap>
+    <select id="selectMember" resultMap="memberMap">
+        WITH V_PROD AS (
+            SELECT	PROD.*
+                 , LPROD.*
+                 , BUYER.*
+            FROM PROD INNER JOIN LPROD ON (PROD_LGU = LPROD_GU)
+                      INNER JOIN BUYER ON (PROD_BUYER = BUYER_ID)
+        ), V_CART AS(
+            SELECT  CART.*
+                 , TO_DATE( SUBSTR(CART_NO, 1, 8), 'YYYYMMDD' ) AS CART_DATE
+                 , PROD_ID, PROD_NAME, PROD_LGU
+                 , LPROD_ID, LPROD_GU, LPROD_NM
+                 , BUYER_ID, BUYER_NAME
+            FROM CART INNER JOIN V_PROD ON (CART_PROD = PROD_ID)
+        )
+        SELECT
+            MEM_ID, MEM_PASS, MEM_NAME, MEM_REGNO1
+             , MEM_REGNO2, MEM_BIR, MEM_ZIP, MEM_ADD1
+             , MEM_ADD2, MEM_HOMETEL, MEM_COMTEL
+             , MEM_HP, MEM_MAIL, MEM_JOB, MEM_LIKE
+             , MEM_MEMORIAL, MEM_MEMORIALDAY, MEM_MILEAGE
+             , MEM_DELETE, MEM_ROLE
+             , MEM_IMG
+             , V_CART.*
+        FROM MEMBER LEFT OUTER JOIN V_CART on (MEM_ID = CART_MEMBER)
+        WHERE MEM_ID = #{memId}
+    </select>
+    <select id="selectMemberList" resultType="MemberVO">
+        SELECT
+            MEM_ID, MEM_PASS, MEM_NAME, MEM_REGNO1
+             , MEM_REGNO2, MEM_BIR, MEM_ZIP, MEM_ADD1
+             , MEM_ADD2, MEM_HOMETEL, MEM_COMTEL
+             , MEM_HP, MEM_MAIL, MEM_JOB, MEM_LIKE
+             , MEM_MEMORIAL, MEM_MEMORIALDAY, MEM_MILEAGE
+             , MEM_DELETE, MEM_ROLE
+        FROM MEMBER
+    </select>
+    <insert id="insertMember">
+        INSERT INTO MEMBER (
+        MEM_ID
+        , MEM_PASS
+        , MEM_NAME
+        , MEM_REGNO1
+        , MEM_REGNO2
+        , MEM_BIR
+        , MEM_ZIP
+        , MEM_ADD1
+        , MEM_ADD2
+        , MEM_HOMETEL
+        , MEM_COMTEL
+        , MEM_HP
+        , MEM_MAIL
+        , MEM_JOB
+        , MEM_LIKE
+        , MEM_MEMORIAL
+        , MEM_MEMORIALDAY
+        <if test="memImg neq null and memImg.length gt 0">
+            , MEM_IMG
+        </if>
+        ) VALUES (
+        #{memId,jdbcType=VARCHAR}
+        , #{memPass,jdbcType=VARCHAR}
+        , #{memName,jdbcType=VARCHAR}
+        , #{memRegno1,jdbcType=VARCHAR}
+        , #{memRegno2,jdbcType=VARCHAR}
+        , #{memBir,jdbcType=DATE}
+        , #{memZip,jdbcType=VARCHAR}
+        , #{memAdd1,jdbcType=VARCHAR}
+        , #{memAdd2,jdbcType=VARCHAR}
+        , #{memHometel,jdbcType=VARCHAR}
+        , #{memComtel,jdbcType=VARCHAR}
+        , #{memHp,jdbcType=VARCHAR}
+        , #{memMail,jdbcType=VARCHAR}
+        , #{memJob,jdbcType=VARCHAR}
+        , #{memLike,jdbcType=VARCHAR}
+        , #{memMemorial,jdbcType=VARCHAR}
+        , #{memMemorialday,jdbcType=DATE}
+        <if test="memImg neq null and memImg.length gt 0">
+            , #{memImg,jdbcType=BLOB}
+        </if>
+
+        )
+    </insert>
+    <update id="updateMember">
+        UPDATE MEMBER
+        SET
+        MEM_NAME = #{memName,jdbcType=VARCHAR}
+        , MEM_ZIP = #{memZip,jdbcType=CHAR}
+        , MEM_ADD1 = #{memAdd1,jdbcType=VARCHAR}
+        , MEM_ADD2 = #{memAdd2,jdbcType=VARCHAR}
+        , MEM_HOMETEL = #{memHometel,jdbcType=VARCHAR}
+        , MEM_COMTEL = #{memComtel,jdbcType=VARCHAR}
+        , MEM_HP = #{memHp,jdbcType=VARCHAR}
+        , MEM_MAIL = #{memMail,jdbcType=VARCHAR}
+        , MEM_JOB = #{memJob,jdbcType=VARCHAR}
+        , MEM_LIKE = #{memLike,jdbcType=VARCHAR}
+        , MEM_MEMORIAL = #{memMemorial,jdbcType=VARCHAR}
+        , MEM_MEMORIALDAY = #{memMemorialday,jdbcType=DATE}
+        <if test="memImg neq null and memImg.length gt 0">
+            , MEM_IMG = #{memImg,jdbcType=BLOB}
+        </if>
+        WHERE MEM_ID = #{memId}
+    </update>
+    <delete id="deleteMember">
+        UPDATE MEMBER
+        SET
+            MEM_DELETE = 'Y'
+        WHERE MEM_ID = #{memId}
+    </delete>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Person Management</title>
+</head>
+<body>
+<h1>Person 관리 시스템</h1>
+
+<!-- Person 목록 표시 테이블 -->
+<table id="personTable" border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>이름</th>
+        <th>성별</th>
+        <th>나이</th>
+        <th>주소</th>
+        <th>작업</th>
+    </tr>
+    </thead>
+    <tbody>
+<!--    여기에 데이터 보이게하기-->
+    </tbody>
+</table>
+
+<h2>새로운 Person 추가</h2>
+<form id="addPersonForm">
+    <label for="id">ID:</label><br>
+    <input type="text" id="id" name="id"><br>
+
+    <label for="name">이름:</label><br>
+    <input type="text" id="name" name="name"><br>
+
+    <label for="gender">성별:</label><br>
+    <input type="text" id="gender" name="gender"><br>
+
+    <label for="age">나이:</label><br>
+    <input type="text" id="age" name="age"><br>
+
+    <label for="address">주소:</label><br>
+    <input type="text" id="address" name="address"><br><br>
+
+    <input type="submit" value="추가">
+</form>
+
+
+<script src="../js/app/person/person.js"></script>
+</body>
+</html>

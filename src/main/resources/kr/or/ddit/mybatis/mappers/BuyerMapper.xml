@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.buyer.dao.BuyerMapper">
+
+    <resultMap id="buyerResultMap" type="BuyerVO" autoMapping="true">
+        <association property="lprod" javaType="LprodVO" autoMapping="true"/>
+    </resultMap>
+
+
+    <select id="selectBuyerList" resultType="BuyerVO">
+        SELECT BUYER_ID,
+               BUYER_NAME,
+               BUYER_LGU,
+               BUYER_BANK,
+               BUYER_BANKNO,
+               BUYER_BANKNAME,
+               BUYER_ZIP,
+               BUYER_ADD1,
+               BUYER_ADD2,
+               BUYER_COMTEL,
+               BUYER_FAX,
+               BUYER_MAIL,
+               BUYER_CHARGER,
+               BUYER_TELEXT
+            FROM BUYER
+    </select>
+
+    <resultMap type="BuyerVO" id="buyerMap" autoMapping="true">
+        <id property="buyerId" column="BUYER_ID"/>
+        <association property="lprod" javaType="LprodVO" autoMapping="true" />
+        <collection property="prodList" ofType="ProdVO" autoMapping="true" />
+    </resultMap>
+    <select id="selectBuyer" resultMap="buyerMap">
+        WITH V_BUYER  AS (
+            SELECT BUYER.*, LPROD.*
+            FROM BUYER INNER JOIN LPROD ON (BUYER_LGU = LPROD_GU)
+        )
+        SELECT
+            V_BUYER.*
+             , PROD.*
+        FROM V_BUYER LEFT OUTER JOIN PROD ON (BUYER_ID = PROD_BUYER)
+        WHERE BUYER_ID = #{buyerId}
+    </select>
+
+    <insert id="insertBuyer" parameterType="BuyerVO">
+<!--        <selectKey order="BEFORE" keyProperty="prodId" resultType="string">-->
+<!--            SELECT #{prodLgu} ||-->
+<!--            LPAD( NVL( TO_NUMBER( SUBSTR(MAX(PROD_ID), 5) ), 0) + 1, 6, '0')-->
+<!--            FROM PROD-->
+<!--            WHERE PROD_LGU = #{prodLgu}-->
+<!--        </selectKey> 제조사ID는 그냥 만들어도되는거아닌가..?-->
+        INSERT INTO BUYER (
+            BUYER_ID,
+            BUYER_NAME,
+            BUYER_LGU,
+            BUYER_BANK,
+            BUYER_BANKNO,
+            BUYER_BANKNAME,
+            BUYER_ZIP,
+            BUYER_ADD1,
+            BUYER_ADD2,
+            BUYER_COMTEL,
+            BUYER_FAX,
+            BUYER_MAIL,
+            BUYER_CHARGER,
+            BUYER_TELEXT
+        ) VALUES (
+                     #{buyerId, jdbcType=VARCHAR},
+                     #{buyerName, jdbcType=VARCHAR},
+                     #{buyerLgu, jdbcType=CHAR},
+                     #{buyerBank, jdbcType=VARCHAR},
+                     #{buyerBankno, jdbcType=VARCHAR},
+                     #{buyerBankname, jdbcType=VARCHAR},
+                     #{buyerZip, jdbcType=VARCHAR},
+                     #{buyerAdd1, jdbcType=VARCHAR},
+                     #{buyerAdd2, jdbcType=VARCHAR},
+                     #{buyerComtel, jdbcType=VARCHAR},
+                     #{buyerFax, jdbcType=VARCHAR},
+                     #{buyerMail, jdbcType=VARCHAR},
+                     #{buyerCharger, jdbcType=VARCHAR},
+                     #{buyerTelext, jdbcType=VARCHAR}
+                 )
+    </insert>
+
+    <update id="updateBuyer" parameterType="BuyerVO">
+        UPDATE BUYER
+        SET
+            BUYER_NAME     = #{buyerName, jdbcType=VARCHAR},
+            BUYER_LGU      = #{buyerLgu, jdbcType=CHAR},
+            BUYER_BANK     = #{buyerBank, jdbcType=VARCHAR},
+            BUYER_BANKNO   = #{buyerBankno, jdbcType=VARCHAR},
+            BUYER_BANKNAME = #{buyerBankname, jdbcType=VARCHAR},
+            BUYER_ZIP      = #{buyerZip, jdbcType=VARCHAR},
+            BUYER_ADD1     = #{buyerAdd1, jdbcType=VARCHAR},
+            BUYER_ADD2     = #{buyerAdd2, jdbcType=VARCHAR},
+            BUYER_COMTEL   = #{buyerComtel, jdbcType=VARCHAR},
+            BUYER_FAX      = #{buyerFax, jdbcType=VARCHAR},
+            BUYER_MAIL     = #{buyerMail, jdbcType=VARCHAR},
+            BUYER_CHARGER  = #{buyerCharger, jdbcType=VARCHAR},
+            BUYER_TELEXT   = #{buyerTelext, jdbcType=VARCHAR}
+        WHERE BUYER_ID = #{buyerId, jdbcType=VARCHAR}
+    </update>
+
+</mapper>
