@@ -1,6 +1,9 @@
 package kr.or.ddit.prod.dao;
 
+import kr.or.ddit.paging.PaginationInfo;
 import kr.or.ddit.vo.ProdVO;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -8,6 +11,7 @@ import java.util.List;
  * 상품관리(CRUD) persistence layer
  *
  */
+@Mapper
 public interface ProdMapper {
     /**
      * 상품 등록
@@ -21,11 +25,17 @@ public interface ProdMapper {
      * @return
      */
     public ProdVO selectProd(String prodId);
+
     /**
-     * 상품 목록조회
+     * 페이징 처리를 위한 검색 결과 레코드 수 조회
      * @return
      */
-    public List<ProdVO> selectProdList();
+    public int selectTotalRecord(@Param("paging") PaginationInfo<ProdVO> paging);
+    /**
+     * 상품 검색결과 목록조회
+     * @return
+     */
+    public List<ProdVO> selectProdList(@Param("paging") PaginationInfo<ProdVO> paging);
     /**
      * 상품 수정
      * @param prod

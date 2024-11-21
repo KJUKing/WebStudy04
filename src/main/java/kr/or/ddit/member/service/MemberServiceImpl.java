@@ -3,6 +3,7 @@ package kr.or.ddit.member.service;
 import kr.or.ddit.commons.enumpkg.ServiceResult;
 import kr.or.ddit.commons.exception.PKNotFoundException;
 import kr.or.ddit.member.dao.MemberDAO;
+import kr.or.ddit.paging.PaginationInfo;
 import kr.or.ddit.vo.MemberVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -40,8 +41,10 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public List<MemberVO> readMemberList() {
-        return dao.selectMemberList();
+    public List<MemberVO> readMemberList(PaginationInfo paging) {
+        int totalRecord = dao.selectTotalRecord(paging);
+        paging.setTotalRecord(totalRecord);
+        return dao.selectMemberList(paging);
     }
 
     @Override

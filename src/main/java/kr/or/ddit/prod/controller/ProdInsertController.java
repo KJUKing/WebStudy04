@@ -1,18 +1,10 @@
 package kr.or.ddit.prod.controller;
 
 import kr.or.ddit.buyer.dao.BuyerMapper;
-import kr.or.ddit.buyer.dao.BuyerMapperImpl;
 import kr.or.ddit.commons.enumpkg.ServiceResult;
 import kr.or.ddit.lprod.dao.LprodMapper;
-import kr.or.ddit.lprod.dao.LprodMapperImpl;
-import kr.or.ddit.mvc.ViewResolverComposite;
-import kr.or.ddit.mvc.multipart.MultipartFile;
-import kr.or.ddit.mvc.multipart.MultipartHttpServletRequest;
 import kr.or.ddit.prod.service.ProdService;
 import kr.or.ddit.prod.service.ProdServiceImpl;
-import kr.or.ddit.utils.PopulateUtils;
-import kr.or.ddit.utils.ValidateUtils;
-import kr.or.ddit.validate.InsertGroup;
 import kr.or.ddit.vo.ProdVO;
 
 import javax.servlet.ServletConfig;
@@ -33,8 +25,8 @@ import java.util.Map;
 @MultipartConfig
 public class ProdInsertController extends HttpServlet{
     private ProdService service = new ProdServiceImpl();
-    private LprodMapper lprodMapper = new LprodMapperImpl();
-    private BuyerMapper buyerMapper = new BuyerMapperImpl();
+    private LprodMapper lprodMapper ;
+    private BuyerMapper buyerMapper;
     private ServletContext application;
     private File saveFolder;
 
@@ -58,7 +50,7 @@ public class ProdInsertController extends HttpServlet{
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         addAttribute(req);
         String lvn = "prod/prodForm";
-        new ViewResolverComposite().resolveView(lvn, req, resp);
+
     }
 
     @Override
@@ -70,16 +62,11 @@ public class ProdInsertController extends HttpServlet{
         ProdVO prod = new ProdVO();
         req.setAttribute("prod", prod);
 
-        PopulateUtils.populate(prod, req.getParameterMap());
-        if(req instanceof MultipartHttpServletRequest) {
-            MultipartFile prodImage = ((MultipartHttpServletRequest) req).getFile("prodImage");
-            prod.setProdImage(prodImage);
-        }
 
 //		3. 유효성 검증
         Map<String, List<String>> errors = new HashMap<>();
         req.setAttribute("errors", errors);
-        ValidateUtils.validate(prod, errors, InsertGroup.class);
+
 
         String lvn = null;
         if (errors.isEmpty()) {
@@ -109,16 +96,13 @@ public class ProdInsertController extends HttpServlet{
             lvn = "prod/prodForm";
         }
 
-        new ViewResolverComposite().resolveView(lvn, req, resp);
     }
 
     private void processProdImage(ProdVO prod) throws IOException {
 //		이미지 업로드 처리
         String saveName = prod.getProdImg();
         File saveFile = new File(saveFolder, saveName);
-        MultipartFile prodImage = prod.getProdImage();
-        if(prodImage!=null)
-            prodImage.transferTo(saveFile);
+
 
     }
 }

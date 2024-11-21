@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.*;
@@ -27,6 +28,8 @@ import java.util.List;
 @EqualsAndHashCode(of = {"memId", "memRegno1", "memRegno2"})
 @ToString
 public class MemberVO implements Serializable{
+    private int rnum;
+
     @NotBlank(groups = {Default.class, DeleteGroup.class})
     @Size(max = 15, groups = {Default.class, DeleteGroup.class})
     private String memId;
@@ -44,6 +47,7 @@ public class MemberVO implements Serializable{
     @Size(min = 7, max = 7, groups = InsertGroup.class)
     @ToString.Exclude
     private transient String memRegno2;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime memBir;
     @NotBlank
     private String memZip;
@@ -65,6 +69,7 @@ public class MemberVO implements Serializable{
     private String memJob;
     private String memLike;
     private String memMemorial;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate memMemorialday;
     @Min(0)
     private Long memMileage;

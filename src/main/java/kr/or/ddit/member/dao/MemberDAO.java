@@ -1,5 +1,6 @@
 package kr.or.ddit.member.dao;
 
+import kr.or.ddit.paging.PaginationInfo;
 import kr.or.ddit.vo.MemberVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -35,7 +36,10 @@ public interface MemberDAO {
      * 회원 목록 조회
      * @return 없어도, empty list 반환
      */
-    public List<MemberVO> selectMemberList();
+    public List<MemberVO> selectMemberList(PaginationInfo paging);
+
+    public int selectTotalRecord(PaginationInfo paging);
+
     /**
      * 회원정보 수정
      * @param member

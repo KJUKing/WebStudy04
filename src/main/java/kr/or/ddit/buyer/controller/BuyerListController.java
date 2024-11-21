@@ -2,7 +2,7 @@ package kr.or.ddit.buyer.controller;
 
 import kr.or.ddit.buyer.service.BuyerService;
 import kr.or.ddit.buyer.service.BuyerServiceImpl;
-import kr.or.ddit.mvc.ViewResolverComposite;
+
 import kr.or.ddit.vo.BuyerVO;
 
 import javax.servlet.ServletException;
@@ -27,6 +27,5 @@ public class BuyerListController extends HttpServlet {
 
         String lvn = "buyer/buyerList";
 
-        new ViewResolverComposite().resolveView(lvn, req, resp);
     }
 }

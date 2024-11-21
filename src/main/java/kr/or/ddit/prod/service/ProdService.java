@@ -2,6 +2,7 @@ package kr.or.ddit.prod.service;
 
 import kr.or.ddit.commons.enumpkg.ServiceResult;
 import kr.or.ddit.commons.exception.PKNotFoundException;
+import kr.or.ddit.paging.PaginationInfo;
 import kr.or.ddit.vo.ProdVO;
 
 import java.util.List;
@@ -26,7 +27,7 @@ public interface ProdService {
      * 차후 페이징과 검색 예정
      * @return
      */
-    public List<ProdVO> readProdList();
+    public List<ProdVO> readProdList(PaginationInfo paging);
     /**
      * @param prod
      * @return OK, FAIL

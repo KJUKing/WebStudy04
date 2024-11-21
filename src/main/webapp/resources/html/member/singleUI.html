@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="../../NiceAdmin/assets/vendor/bootstrap/css/bootstrap.min.css">
+
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" type="text/css" href="../../DataTables/datatables.min.css"/>
+</head>
+<body>
+<table id="myTable" class="table table-striped">
+    <thead>
+    <tr>
+        <th>상품아이디</th>
+        <th>상품명</th>
+        <th>상품분류</th>
+        <th>상품제조사</th>
+        <th>구매가</th>
+        <th>판매가</th>
+        <th>입고일</th>
+    </tr>
+    </thead>
+</table>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table id="detailTbl" class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>상세정보 1</th>
+                        <th>상세정보 2</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- 상세 데이터를 여기에 추가 -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<!-- Bootstrap JS -->
+<script type="text/javascript" src="../../NiceAdmin/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<!-- DataTables JS -->
+<script type="text/javascript" src="../../DataTables/datatables.min.js"></script>
+
+<!-- 사용자 정의 JS -->
+<script type="text/javascript">
+    $(document).ready(function () {
+        // 메인 테이블 초기화
+        $('#myTable').DataTable({
+            ajax: {
+                url: '../../../prod/prodList.do',
+                dataSrc: 'prodList'
+            },
+            columns: [
+                {data: 'prodId'},
+                {data: 'prodName'},
+                {data: 'lprod.lprodNm'},
+                {data: 'buyer.buyerName'},
+                {data: 'prodCost'},
+                {data: 'prodPrice'},
+                {data: 'prodInsdate'}
+            ]
+        });
+
+        // 모달이 열릴 때 상세 테이블 초기화
+        $('#exampleModal').on('show.bs.modal', function () {
+            $('#detailTbl').DataTable({
+                destroy: true, // 기존 테이블 초기화 방지
+                data: [], // 여기에 서버에서 받은 상세 데이터를 입력
+                columns: [
+                    {data: 'detail1'},
+                    {data: 'detail2'}
+                ]
+            });
+        });
+    });
+</script>
+</body>
+</html>

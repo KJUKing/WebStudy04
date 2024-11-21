@@ -43,15 +43,56 @@
         FROM MEMBER LEFT OUTER JOIN V_CART on (MEM_ID = CART_MEMBER)
         WHERE MEM_ID = #{memId}
     </select>
-    <select id="selectMemberList" resultType="MemberVO">
-        SELECT
-            MEM_ID, MEM_PASS, MEM_NAME, MEM_REGNO1
-             , MEM_REGNO2, MEM_BIR, MEM_ZIP, MEM_ADD1
-             , MEM_ADD2, MEM_HOMETEL, MEM_COMTEL
-             , MEM_HP, MEM_MAIL, MEM_JOB, MEM_LIKE
-             , MEM_MEMORIAL, MEM_MEMORIALDAY, MEM_MILEAGE
-             , MEM_DELETE, MEM_ROLE
+
+
+    <sql id="searchFrag">
+        <where>
+            <if test="simpleCondition neq null">
+                <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(simpleCondition.searchWord)">
+                    <choose>
+                        <when test="simpleCondition.searchType eq 'name'">
+                            MEM_NAME LIKE '%'||#{simpleCondition.searchWord}||'%'
+                        </when>
+                        <when test="simpleCondition.searchType eq 'address'">
+                            INSTR(MEM_ADD1, #{simpleCondition.searchWord}) > 0
+                        </when>
+                        <otherwise>
+                            INSTR(MEM_NAME, #{simpleCondition.searchWord}) > 0
+                            OR
+                            INSTR(MEM_ADD1, #{simpleCondition.searchWord}) > 0
+                        </otherwise>
+                    </choose>
+                </if>
+            </if>
+        </where>
+    </sql>
+
+    <select id="selectTotalRecord" resultType="int">
+        SELECT COUNT(*)
         FROM MEMBER
+        <include refid="searchFrag"/>
+    </select>
+
+    <select id="selectMemberList" resultType="MemberVO">
+        SELECT B.*
+        FROM
+            (
+                SELECT ROWNUM RNUM, A.*
+                FROM
+                    (
+                        SELECT
+                            MEM_ID, MEM_PASS, MEM_NAME, MEM_REGNO1
+                             , MEM_REGNO2, MEM_BIR, MEM_ZIP, MEM_ADD1
+                             , MEM_ADD2, MEM_HOMETEL, MEM_COMTEL
+                             , MEM_HP, MEM_MAIL, MEM_JOB, MEM_LIKE
+                             , MEM_MEMORIAL, MEM_MEMORIALDAY, MEM_MILEAGE
+                             , MEM_DELETE, MEM_ROLE
+                        FROM MEMBER
+                       <include refid="searchFrag"/>
+                        ORDER BY ROWID DESC
+                    ) A
+            ) B
+        WHERE RNUM BETWEEN #{startRow} AND #{endRow}
     </select>
     <insert id="insertMember">
         INSERT INTO MEMBER (

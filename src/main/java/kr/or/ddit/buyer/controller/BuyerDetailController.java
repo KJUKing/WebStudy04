@@ -30,6 +30,5 @@ public class BuyerDetailController extends HttpServlet {
         req.setAttribute("buyer", buyer);
         String lvn = "/WEB-INF/views/buyer/buyerDetail";
 
-        new ViewResolverComposite().resolveView(lvn, req, resp);
     }
 }

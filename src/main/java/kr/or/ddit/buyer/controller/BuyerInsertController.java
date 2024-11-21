@@ -4,10 +4,6 @@ import kr.or.ddit.buyer.service.BuyerService;
 import kr.or.ddit.buyer.service.BuyerServiceImpl;
 import kr.or.ddit.commons.enumpkg.ServiceResult;
 import kr.or.ddit.lprod.dao.LprodMapper;
-import kr.or.ddit.lprod.dao.LprodMapperImpl;
-import kr.or.ddit.mvc.ViewResolverComposite;
-import kr.or.ddit.utils.PopulateUtils;
-import kr.or.ddit.utils.ValidateUtils;
 import kr.or.ddit.validate.InsertGroup;
 import kr.or.ddit.vo.BuyerVO;
 
@@ -24,7 +20,7 @@ import java.util.Map;
 @WebServlet("/buyer/buyerInsert.do")
 public class BuyerInsertController extends HttpServlet {
     private BuyerService service = new BuyerServiceImpl();
-    private LprodMapper lprodMapper = new LprodMapperImpl();
+    private LprodMapper lprodMapper;
 
     private void addAttribute(HttpServletRequest req) {
         req.setAttribute("lprodList", lprodMapper.selectLprodList());

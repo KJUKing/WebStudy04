@@ -1,6 +1,7 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles"%>
-<%@ taglib prefix="title" uri="http://tiles.apache.org/tags-tiles" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+         pageEncoding="UTF-8"%>
+<%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -12,7 +13,13 @@
     <meta content="" name="description">
     <meta content="" name="keywords">
 
-    <title:insertAttribute name="preScript"/>
+    <tiles:insertAttribute name="preScript" />
+    <c:if test="${not empty message }">
+        <script type="text/javascript">
+            alert("${message}");
+        </script>
+    </c:if>
+
     <!-- =======================================================
     * Template Name: NiceAdmin
     * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
@@ -26,29 +33,34 @@
 
 <!-- ======= Header ======= -->
 <header id="header" class="header fixed-top d-flex align-items-center">
-<tiles:insertAttribute name="header"/>
+
+    <tiles:insertAttribute name="header" />
+
 </header><!-- End Header -->
 
 <!-- ======= Sidebar ======= -->
 <aside id="sidebar" class="sidebar">
+
     <tiles:insertAttribute name="sidebar"/>
+
 </aside><!-- End Sidebar-->
 
 <main id="main" class="main">
-    <tiles:insertAttribute name="content"/>
+
+    <tiles:insertAttribute name="content" />
+
 </main><!-- End #main -->
+
 <!-- ======= Footer ======= -->
 <footer id="footer" class="footer">
+
     <tiles:insertAttribute name="footer"/>
+
 </footer><!-- End Footer -->
 
 <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
-<!-- Vendor JS Files -->
-<tiles:insertAttribute name="postScript"/>
-
-<!-- Template Main JS File -->
-<script src="assets/js/main.js"></script>
+<tiles:insertAttribute name="postScript" />
 
 </body>
 

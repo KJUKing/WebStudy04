@@ -2,15 +2,19 @@ package kr.or.ddit.prod.service;
 
 import kr.or.ddit.commons.enumpkg.ServiceResult;
 import kr.or.ddit.commons.exception.PKNotFoundException;
+import kr.or.ddit.paging.PaginationInfo;
 import kr.or.ddit.prod.dao.ProdMapper;
-import kr.or.ddit.prod.dao.ProdMapperImpl;
 import kr.or.ddit.vo.ProdVO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class ProdServiceImpl implements ProdService {
 
-    private ProdMapper dao = new ProdMapperImpl();
+    @Autowired
+    private ProdMapper dao;
 
     @Override
     public ServiceResult createProd(ProdVO prod) {
@@ -26,9 +30,15 @@ public class ProdServiceImpl implements ProdService {
     }
 
     @Override
-    public List<ProdVO> readProdList() {
-        return dao.selectProdList();
+    public List<ProdVO> readProdList(PaginationInfo paging) {
+        if (paging != null) {
+            int totalRecord = dao.selectTotalRecord(paging);
+            paging.setTotalRecord(totalRecord); // totalRecord 값을 설정합니다.
+        }
+
+        return dao.selectProdList(paging);
     }
+
 
     @Override
     public ServiceResult modifyProd(ProdVO prod) {

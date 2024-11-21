@@ -9,7 +9,36 @@
         <association property="lprod" javaType="LprodVO" autoMapping="true" />
         <association property="buyer" javaType="BuyerVO" autoMapping="true" />
     </resultMap>
+
+    <sql id="searchFrag">
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test="paging neq null and paging.detailCondition neq null">
+                <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(paging.detailCondition.prodLgu)">
+                    AND PROD_LGU = #{paging.detailCondition.prodLgu}
+                </if>
+                <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(paging.detailCondition.prodBuyer)">
+                    AND PROD_BUYER = #{paging.detailCondition.prodBuyer}
+                </if>
+                <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(paging.detailCondition.prodName)">
+                    AND INSTR(PROD_NAME, #{paging.detailCondition.prodName}) > 0
+                </if>
+            </if>
+        </trim>
+    </sql>
+
+    <select id="selectTotalRecord" resultType="int">
+        SELECT COUNT(*)
+        <include refid="fromFrag" />
+        <include refid="searchFrag"/>
+    </select>
+
     <select id="selectProdList" resultMap="prodListMap">
+        SELECT B.*
+        FROM
+        (
+        SELECT ROWNUM RNUM, A.*
+        FROM
+        (
         SELECT
         PROD_ID
         , PROD_NAME
@@ -20,8 +49,21 @@
         , PROD_INSDATE
         , LPROD_NM
         , BUYER_NAME
-        <include refid="fromFrag" />
+        <include refid="fromFrag"/>
+        <include refid="searchFrag"/>
+        ORDER BY PROD.ROWID DESC
+        ) A
+        ) B
+        <where>
+        <if test="paging neq null">
+        <![CDATA[
+			RNUM >= #{paging.startRow} AND RNUM <= #{paging.endRow}
+			]]>
+        </if>
+        </where>
     </select>
+
+
     <select id="selectProd" resultMap="prodListMap">
         SELECT
         PROD_ID

@@ -1,37 +1,32 @@
-package kr.or.ddit.member.service;
+package kr.or.ddit.prod.service;
 
-import kr.or.ddit.annotation.RootContextWebConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 
 @Slf4j
-//@RootContextWebConfig
 @SpringJUnitWebConfig(locations = "file:src/main/resources/kr/or/ddit/spring/context-*.xml")
-class MemberServiceImplTest {
+//@RootContextWebConfig
+class ProdServiceImplTest {
 
     @Autowired
-    private MemberService service;
+    ProdService service;
 
     @Test
-    void createMember() {
+    void createProd() {
     }
 
     @Test
-    void readMember() {
+    void readProd() {
     }
 
     @Test
-    void readMemberList() {
+    void readProdList() {
 
     }
 
     @Test
-    void modifyMember() {
-    }
-
-    @Test
-    void removeMember() {
+    void modifyProd() {
     }
 }

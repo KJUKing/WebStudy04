@@ -2,6 +2,7 @@ package kr.or.ddit.member.service;
 
 import kr.or.ddit.commons.enumpkg.ServiceResult;
 import kr.or.ddit.commons.exception.PKNotFoundException;
+import kr.or.ddit.paging.PaginationInfo;
 import kr.or.ddit.vo.MemberVO;
 
 import java.util.List;
@@ -29,7 +30,7 @@ public interface MemberService {
       * 회원 목록 조회(차후 페이징과 검색 적용)
       * @return
       */
-     public List<MemberVO> readMemberList();
+     public List<MemberVO> readMemberList(PaginationInfo paging);
      /**
       * 회원 정보 수정
       * @param member

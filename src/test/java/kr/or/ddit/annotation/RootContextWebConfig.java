@@ -1,5 +1,6 @@
 package kr.or.ddit.annotation;
 
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 
 import java.lang.annotation.ElementType;

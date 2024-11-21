@@ -39,6 +39,8 @@ import java.util.UUID;
 @EqualsAndHashCode(of = "prodId")
 @ToString
 public class ProdVO implements Serializable{
+    private int rnum;
+
     @NotBlank(groups = UpdateGroup.class)
     private String prodId;
     @NotBlank

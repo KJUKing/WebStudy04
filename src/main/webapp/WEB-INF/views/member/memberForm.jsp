@@ -1,163 +1,141 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<form method="post" enctype="multipart/form-data">
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+
+<form:form method="post" enctype="multipart/form-data" modelAttribute="member">
     <table class="table">
         <tr>
             <th>프로필이미지</th>
             <td>
                 <input type="file" name="memImage" accept="image/*" />
+                <form:errors path="memImage" cssClass="text-danger" />
             </td>
         </tr>
         <tr>
             <th>아이디</th>
             <td>
-                <input type="text" name="memId" class="form-control"
-                       value="${member.memId }" />
-                <span class="text-danger">${errors.memId }</span>
+                <form:input path="memId" cssClass="form-control" />
+                <form:errors path="memId" cssClass="text-danger" />
             </td>
         </tr>
         <tr>
             <th>비밀번호</th>
             <td>
-                <input type="text" name="memPass" class="form-control"
-                       value="${member.memPass }" />
-                <span class="text-danger">${errors.memPass }</span>
+                <form:password path="memPass" cssClass="form-control" />
+                <form:errors path="memPass" cssClass="text-danger" />
             </td>
         </tr>
         <tr>
             <th>이름</th>
             <td>
-                <input type="text" name="memName" class="form-control"
-                       value="${member.memName }" />
-                <span class="text-danger">${errors.memName }</span>
+                <form:input path="memName" cssClass="form-control" />
+                <form:errors path="memName" cssClass="text-danger" />
             </td>
         </tr>
         <tr>
             <th>주민번호1</th>
             <td>
-                <input type="text" name="memRegno1" class="form-control"
-                       value="${member.memRegno1 }" />
-                <span class="text-danger">${errors.memRegno1 }</span>
+                <form:input path="memRegno1" cssClass="form-control" />
+                <form:errors path="memRegno1" cssClass="text-danger" />
             </td>
         </tr>
         <tr>
             <th>주민번호2</th>
             <td>
-                <input type="text" name="memRegno2" class="form-control"
-                       value="${member.memRegno2 }" />
-                <span class="text-danger">${errors.memRegno2 }</span>
+                <form:input path="memRegno2" cssClass="form-control" />
+                <form:errors path="memRegno2" cssClass="text-danger" />
             </td>
         </tr>
         <tr>
             <th>생일</th>
             <td>
-                <input type="datetime-local" name="memBir" class="form-control"
-                       value="${member.memBir }" />
-                <span class="text-danger">${errors.memBir }</span>
+                <form:input type="datetime-local" path="memBir" cssClass="form-control" />
+                <form:errors path="memBir" cssClass="text-danger" />
             </td>
         </tr>
         <tr>
             <th>우편번호</th>
             <td>
-                <input type="text" name="memZip" class="form-control"
-                       value="${member.memZip }" />
-                <span class="text-danger">${errors.memZip }</span>
+                <form:input path="memZip" cssClass="form-control" />
+                <form:errors path="memZip" cssClass="text-danger" />
             </td>
         </tr>
         <tr>
             <th>주소1</th>
             <td>
-                <input type="text" name="memAdd1" class="form-control"
-                       value="${member.memAdd1 }" />
-                <span class="text-danger">${errors.memAdd1 }</span>
+                <form:input path="memAdd1" cssClass="form-control" />
+                <form:errors path="memAdd1" cssClass="text-danger" />
             </td>
         </tr>
         <tr>
             <th>주소2</th>
             <td>
-                <input type="text" name="memAdd2" class="form-control"
-                       value="${member.memAdd2 }" />
-                <span class="text-danger">${errors.memAdd2 }</span>
+                <form:input path="memAdd2" cssClass="form-control" />
+                <form:errors path="memAdd2" cssClass="text-danger" />
             </td>
         </tr>
         <tr>
             <th>집전번</th>
             <td>
-                <input type="text" name="memHometel" class="form-control"
-                       value="${member.memHometel }" />
-                <span class="text-danger">${errors.memHometel }</span>
+                <form:input path="memHometel" cssClass="form-control" />
+                <form:errors path="memHometel" cssClass="text-danger" />
             </td>
         </tr>
         <tr>
             <th>회사전번</th>
             <td>
-                <input type="text" name="memComtel" class="form-control"
-                       value="${member.memComtel }" />
-                <span class="text-danger">${errors.memComtel }</span>
+                <form:input path="memComtel" cssClass="form-control" />
+                <form:errors path="memComtel" cssClass="text-danger" />
             </td>
         </tr>
         <tr>
             <th>휴대폰</th>
             <td>
-                <input type="text" name="memHp" class="form-control"
-                       value="${member.memHp }" />
-                <span class="text-danger">${errors.memHp }</span>
+                <form:input path="memHp" cssClass="form-control" />
+                <form:errors path="memHp" cssClass="text-danger" />
             </td>
         </tr>
         <tr>
             <th>이메일</th>
             <td>
-                <input type="text" name="memMail" class="form-control"
-                       value="${member.memMail }" />
-                <span class="text-danger">${errors.memMail }</span>
+                <form:input type="email" path="memMail" cssClass="form-control" />
+                <form:errors path="memMail" cssClass="text-danger" />
             </td>
         </tr>
         <tr>
             <th>직업</th>
             <td>
-                <input type="text" name="memJob" class="form-control"
-                       value="${member.memJob }" />
-                <span class="text-danger">${errors.memJob }</span>
+                <form:input path="memJob" cssClass="form-control" />
+                <form:errors path="memJob" cssClass="text-danger" />
             </td>
         </tr>
         <tr>
             <th>취미</th>
             <td>
-                <input type="text" name="memLike" class="form-control"
-                       value="${member.memLike }" />
-                <span class="text-danger">${errors.memLike }</span>
+                <form:input path="memLike" cssClass="form-control" />
+                <form:errors path="memLike" cssClass="text-danger" />
             </td>
         </tr>
         <tr>
             <th>기념일</th>
             <td>
-                <input type="text" name="memMemorial" class="form-control"
-                       value="${member.memMemorial }" />
-                <span class="text-danger">${errors.memMemorial }</span>
+                <form:input path="memMemorial" cssClass="form-control" />
+                <form:errors path="memMemorial" cssClass="text-danger" />
             </td>
         </tr>
         <tr>
             <th>기념일자</th>
             <td>
-                <input type="date" name="memMemorialday"
-                       class="form-control" value="${member.memMemorialday }" />
-                <span class="text-danger">${errors.memMemorialday }</span>
+                <form:input type="date" path="memMemorialday" cssClass="form-control" />
+                <form:errors path="memMemorialday" cssClass="text-danger" />
             </td>
         </tr>
         <tr>
             <td colspan="2">
-                <button type="submit">전송</button>
-                <button type="reset">취소</button>
+                <button type="submit" class="btn btn-primary">전송</button>
+                <button type="reset" class="btn btn-danger">취소</button>
             </td>
         </tr>
     </table>
-</form>
-
-
-
-
-
-
-
-
+</form:form>
