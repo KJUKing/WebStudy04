@@ -37,7 +37,45 @@
             <artifactId>javax.inject</artifactId>
             <version>1</version>
         </dependency>
-        <dependency>
+<!--       AOP방법론 지원론-->
+         <dependency>
+             <groupId>org.aspectj</groupId>
+             <artifactId>aspectjweaver</artifactId>
+             <version>1.9.22.1</version>
+             <scope>runtime</scope>
+         </dependency>
+
+         <!-- Spring AOP -->
+         <dependency>
+             <groupId>org.springframework</groupId>
+             <artifactId>spring-aop</artifactId>
+             <version>${org.springframework-version}</version>
+         </dependency>
+
+         <!-- AspectJ Weaver (JoinPoint 포함 AOP 지원) -->
+         <dependency>
+             <groupId>org.aspectj</groupId>
+             <artifactId>aspectjweaver</artifactId>
+             <version>1.9.22.1</version>
+             <scope>runtime</scope>
+         </dependency>
+
+         <!-- AspectJ Tools (컴파일 타임 지원) -->
+         <dependency>
+             <groupId>org.aspectj</groupId>
+             <artifactId>aspectjtools</artifactId>
+             <version>1.9.22.1</version>
+         </dependency>
+
+         <!-- AspectJ Runtime (JoinPoint 및 기타 런타임 기능 지원) -->
+         <dependency>
+             <groupId>org.aspectj</groupId>
+             <artifactId>aspectjrt</artifactId>
+             <version>1.9.22.1</version>
+         </dependency>
+
+
+         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-orm</artifactId>
             <version>${org.springframework-version}</version>

@@ -11,6 +11,7 @@
 
     <context:component-scan base-package="kr.or.ddit" use-default-filters="false">
         <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+        <context:include-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
     </context:component-scan>
 
 <!--    WAS가 가진 DefaultServlet으로 처리하던 정적 자원에 대한 요청을 대신 처리함
@@ -55,6 +56,22 @@
 <!--        lvn == prefix + lvn + suffix 경로에 해당하는 싱글 jsp로 응답 전송-->
         <mvc:jsp prefix="/WEB-INF/views" suffix=".jsp"/>
     </mvc:view-resolvers>
+
+    <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor" id="localeChangeInterceptor">
+        <property name="paramName" value="lang" />
+    </bean>
+
+    <bean class="org.springframework.web.servlet.i18n.CookieLocaleResolver" id="localeResolver">
+
+    </bean>
+
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <mvc:exclude-mapping path="/resources/**"/>
+            <ref bean="localeChangeInterceptor" />
+        </mvc:interceptor>
+    </mvc:interceptors>
 </beans>
 
 

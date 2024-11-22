@@ -5,9 +5,16 @@ import kr.or.ddit.commons.exception.PKNotFoundException;
 import kr.or.ddit.paging.PaginationInfo;
 import kr.or.ddit.prod.dao.ProdMapper;
 import kr.or.ddit.vo.ProdVO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -16,9 +23,39 @@ public class ProdServiceImpl implements ProdService {
     @Autowired
     private ProdMapper dao;
 
+    //파일저장위치 주입받기
+    @Value("#{dirInfo.prodImages}")
+    private Resource saveDir;
+
+    private void processProdImage(ProdVO prod) {
+//		이미지 업로드 처리
+        try {
+            String saveName = prod.getProdImg();
+            if (StringUtils.isNotBlank(saveName)) {
+                File saveFile = new File(saveDir.getFile(), saveName);
+                MultipartFile prodImage = prod.getProdImage();
+                if (prodImage != null)
+                    prodImage.transferTo(saveFile);
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+
     @Override
     public ServiceResult createProd(ProdVO prod) {
-        return dao.insertProd(prod) > 0 ? ServiceResult.OK : ServiceResult.FAIL;
+        if (dao.insertProd(prod) > 0) {
+
+            processProdImage(prod);
+            return ServiceResult.OK;
+        } else {
+
+            return ServiceResult.FAIL;
+        }
+
     }
 
     @Override
@@ -39,10 +76,16 @@ public class ProdServiceImpl implements ProdService {
         return dao.selectProdList(paging);
     }
 
-
     @Override
     public ServiceResult modifyProd(ProdVO prod) {
-        return dao.updateProd(prod) > 0 ? ServiceResult.OK : ServiceResult.FAIL;
+        if (dao.updateProd(prod) > 0) {
+
+            processProdImage(prod);
+            return ServiceResult.OK;
+        } else {
+
+            return ServiceResult.FAIL;
+        }
     }
 
 }

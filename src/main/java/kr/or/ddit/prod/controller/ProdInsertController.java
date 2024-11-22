@@ -1,110 +1,103 @@
 package kr.or.ddit.prod.controller;
 
-import kr.or.ddit.buyer.dao.BuyerMapper;
 import kr.or.ddit.commons.enumpkg.ServiceResult;
-import kr.or.ddit.lprod.dao.LprodMapper;
 import kr.or.ddit.prod.service.ProdService;
-import kr.or.ddit.prod.service.ProdServiceImpl;
+import kr.or.ddit.validate.InsertGroup;
 import kr.or.ddit.vo.ProdVO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.ServletConfig;
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.MultipartConfig;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-@WebServlet("/prod/prodInsert.do")
-@MultipartConfig
-public class ProdInsertController extends HttpServlet{
-    private ProdService service = new ProdServiceImpl();
-    private LprodMapper lprodMapper ;
-    private BuyerMapper buyerMapper;
+//@MultipartConfig 이건 디스패처와 필터링으로 넘어감
+@RequestMapping("/prod/prodInsert.do")
+@Controller
+public class ProdInsertController {
+    @Autowired
+    private ProdService service;
+
+    @Inject
+    private WebApplicationContext container;
+
     private ServletContext application;
-    private File saveFolder;
 
-    @Override
-    public void init(ServletConfig config) throws ServletException {
-        super.init(config);
-        application = getServletContext();
-        String realPath = application.getRealPath("/resources/prodImages");
-        saveFolder = new File(realPath);
-        if(!saveFolder.exists()) {
-            saveFolder.mkdirs();
-        }
+    @PostConstruct
+    public void init() {
+        this.application = container.getServletContext();
     }
 
-    private void addAttribute(HttpServletRequest req) {
-        req.setAttribute("lprodList", lprodMapper.selectLprodList());
-        req.setAttribute("buyerList", buyerMapper.selectBuyerList());
+
+    public static final String MODELNAME = "lastCreated";
+
+    @ModelAttribute(MODELNAME)
+    public ProdVO prod() {
+        return new ProdVO();
     }
 
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        addAttribute(req);
-        String lvn = "prod/prodForm";
 
+    /**
+     * model : lprodList, buyerlist
+     * view : prod/prodForm
+     * @param prod
+     * @return
+     */
+    @GetMapping
+    public String doGet(@ModelAttribute(MODELNAME) ProdVO prod
+    ) {
+        return "prod/prodForm";
     }
 
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        addAttribute(req);
+    /**
+     * model : prod, BindingResult.MODEL_KEY_PREFIX+"prod"
+     * view :
+     *       성공 : redirect:/prod/prodList.do
+     *       실패 : prod/prodForm, redirect:/prod/prodInsert.do
+     * @return
+     */
+    @PostMapping
+    protected String doPost(
+            @Validated(InsertGroup.class) @ModelAttribute(MODELNAME) ProdVO prod,
+            Errors errors,
+            RedirectAttributes redirectAttributes
+    ) throws IOException {
 
-        //		1. 요청 파라미터 획득
-//		2. ProdVO 에 파라미터 바인드
-        ProdVO prod = new ProdVO();
-        req.setAttribute("prod", prod);
-
-
-//		3. 유효성 검증
-        Map<String, List<String>> errors = new HashMap<>();
-        req.setAttribute("errors", errors);
-
+        //DataBinder -populateUtil대용
 
         String lvn = null;
-        if (errors.isEmpty()) {
+        redirectAttributes.addFlashAttribute(MODELNAME, prod);
 
-//		4. 통과
-//			1) 로직 실행(createprod)
+        if (!errors.hasErrors()) {
             ServiceResult result = service.createProd(prod);
             switch (result) {
-//			2)  성공 : 상세 페이지로 이동(redirect) : PRG
                 case OK:
-                    req.getSession().setAttribute("lastCreated", prod);
                     lvn = "redirect:/prod/prodList.do";
-                    // 상품 등록에 성공하면, 이진데이터 처리
-                    processProdImage(prod);
                     break;
-
-//				실패 : prodForm 이동(forward) (기존 입력 데이터와 알림 메시지 전달)
                 default:
-                    lvn = "prod/prodForm";
-                    req.setAttribute("message", "서버 오류, 잠시 뒤 다시 가입해보셈.");
+                    lvn = "redirect:/prod/prodInsert.do";
+                    redirectAttributes.addFlashAttribute("message", "서버 오류, 잠시 뒤 다시 가입해보셈.");
                     break;
             }
-
         } else {
-//		5. 실패
-//		prodForm 이동(forward) (기존 입력 데이터와 검증 에러 메시지 전달)
-            lvn = "prod/prodForm";
+            String errAttrName = BindingResult.MODEL_KEY_PREFIX + MODELNAME;
+            redirectAttributes.addFlashAttribute(errAttrName, errors);
+            lvn = "redirect:/prod/prodInsert.do";
         }
-
+        return lvn;
     }
 
-    private void processProdImage(ProdVO prod) throws IOException {
-//		이미지 업로드 처리
-        String saveName = prod.getProdImg();
-        File saveFile = new File(saveFolder, saveName);
 
-
-    }
 }
 
 

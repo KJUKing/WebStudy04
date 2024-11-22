@@ -5,6 +5,7 @@ import kr.or.ddit.validate.UpdateGroup;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Min;
@@ -78,6 +79,7 @@ public class ProdVO implements Serializable{
 
     @NotNull
     private Long prodTotalstock;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate prodInsdate;
     @NotNull
     private Long prodProperstock;

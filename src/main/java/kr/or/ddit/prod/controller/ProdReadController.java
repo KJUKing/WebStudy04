@@ -33,20 +33,6 @@ import java.util.List;
 public class ProdReadController extends HttpServlet{
     @Autowired
     private ProdService service;
-    @Autowired
-    private LprodMapper lprodMapper;
-    @Autowired
-    private BuyerMapper buyerMapper;
-
-    @ModelAttribute("lprodList")
-    public List<LprodVO> lprodList() {
-        return lprodMapper.selectLprodList();
-    }
-
-    @ModelAttribute("buyerList")
-    public List<BuyerVO> buyerList() {
-        return buyerMapper.selectBuyerList();
-    }
 
     @GetMapping("/prodList.do")
     public void doGet(

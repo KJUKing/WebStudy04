@@ -1,5 +1,6 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-         pageEncoding="UTF-8"%>
+         pageEncoding="UTF-8" %>
 
 <div class="d-flex align-items-center justify-content-between">
     <a href="${pageContext.request.contextPath }" class="logo d-flex align-items-center">
@@ -7,14 +8,16 @@
         <span class="d-none d-lg-block">NiceAdmin</span>
     </a>
     <i class="bi bi-list toggle-sidebar-btn"></i>
-</div><!-- End Logo -->
+</div>
+<!-- End Logo -->
 
 <div class="search-bar">
     <form class="search-form d-flex align-items-center" method="POST" action="#">
         <input type="text" name="query" placeholder="Search" title="Enter search keyword">
         <button type="submit" title="Search"><i class="bi bi-search"></i></button>
     </form>
-</div><!-- End Search Bar -->
+</div>
+<!-- End Search Bar -->
 
 <nav class="header-nav ms-auto">
     <ul class="d-flex align-items-center">
@@ -97,8 +100,26 @@
                 </li>
 
             </ul><!-- End Notification Dropdown Items -->
+        </li>
 
-        </li><!-- End Notification Nav -->
+
+        <c:if test="${empty pageContext.request.queryString }">
+            <c:set var="qs" value=""/>
+        </c:if>
+        <c:if test="${not empty pageContext.request.queryString }">
+            <c:set var="qs" value="${pageContext.request.queryString }&"/>
+        </c:if>
+        <li class="nav-item">
+
+            <a href="${pageContext.request.contextPath}?lang=en">영어</a>
+        </li>
+
+        <li class="nav-item">
+            <a href="${pageContext.request.contextPath}?lang=ko">한글</a>
+        </li>
+
+
+        <!-- End Notification Nav -->
 
         <li class="nav-item dropdown">
 
@@ -223,5 +244,7 @@
         </li><!-- End Profile Nav -->
 
     </ul>
-</nav><!-- End Icons Navigation -->
+</nav>
+<!-- End Icons Navigation -->
 
+</jsp:root>

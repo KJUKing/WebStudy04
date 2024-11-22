@@ -27,7 +27,7 @@ public interface ProdService {
      * 차후 페이징과 검색 예정
      * @return
      */
-    public List<ProdVO> readProdList(PaginationInfo paging);
+    public List<ProdVO> readProdList(PaginationInfo<ProdVO> paging);
     /**
      * @param prod
      * @return OK, FAIL
